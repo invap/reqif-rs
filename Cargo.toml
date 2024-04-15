@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 yaserde = "0.10.0"
 yaserde_derive = "0.10.0"
+chrono = "0.4.37"

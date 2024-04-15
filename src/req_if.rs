@@ -1,6 +1,8 @@
 use yaserde_derive::YaSerialize;
 
-const LAST_CHANGE_DATE: &str = "2017-11-14T15:44:26.000+02:00";
+fn get_default_last_change_date() -> String {
+    "2017-11-14T15:44:26.000+02:00".to_string()
+}
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct ReqIfHeader {
@@ -47,7 +49,7 @@ impl DataTypes {
         DataTypes {
             xhtml_definition: DataType {
                 identifier: "DATATYPE-DEFINITION-XHTML-IDENTIFIER".to_string(),
-                last_change: LAST_CHANGE_DATE.to_string(),
+                last_change: get_default_last_change_date(),
                 long_name: "XHTMLString".to_string(),
             },
         }
@@ -63,7 +65,8 @@ pub struct SpecificationTypeModuleAttributes {
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct SpecificationTypeModule {
     #[yaserde(attribute, rename = "IDENTIFIER")]
-    identifier: String,
+    
+identifier: String,
     #[yaserde(attribute, rename = "LAST-CHANGE")]
     last_change: String,
     #[yaserde(attribute, rename = "LONG-NAME")]
@@ -85,12 +88,12 @@ impl SpecTypes {
         SpecTypes {
             specification_type_module: SpecificationTypeModule {
                 identifier: "MODULE-SPECIFICATION-TYPE-ID".to_string(),
-                last_change: LAST_CHANGE_DATE.to_string(),
+                last_change: get_default_last_change_date(),
                 long_name: "Module Type".to_string(),
                 attributes: SpecificationTypeModuleAttributes {
                     reqif_name_attribute: AttributeDefinitionXHtml {
                         identifier: "ATTRIBUTE-DEFINITION-XHTML-REQIF.NAME-ID".to_string(),
-                        last_change: LAST_CHANGE_DATE.to_string(),
+                        last_change: get_default_last_change_date(),
                         long_name: "ReqIF.Name".to_string(),
                         type_ref: TypeDefinitionXHtmlRef {
                             reference: data_types.xhtml_definition.identifier.clone(),
@@ -146,11 +149,11 @@ impl SpecObjectTypeRequirement {
         SpecObjectTypeRequirement {
             identifier: "SPEC-OBJEC-TYPE-REQ-TYPE-IDENTIFIER".to_string(),
             long_name: "Requirement Type".to_string(),
-            last_change: LAST_CHANGE_DATE.to_string(),
+            last_change: get_default_last_change_date(),
             attributes: RequirementSpecObjectTypeAttributes {
                 text_attribute: AttributeDefinitionXHtml {
                     identifier: "ATTRIBUTE-DEFINITION-XHTML-REQIF.Text-ID".to_string(),
-                    last_change: LAST_CHANGE_DATE.to_string(),
+                    last_change: get_default_last_change_date(),
                     long_name: "ReqIF.Text".to_string(),
                     type_ref: TypeDefinitionXHtmlRef {
                         reference: data_types.xhtml_definition.identifier.clone(),
@@ -158,7 +161,7 @@ impl SpecObjectTypeRequirement {
                 },
                 id_attribute: AttributeDefinitionXHtml {
                     identifier: "ATTRIBUTE-DEFINITION-XHTML-PUID-ID".to_string(),
-                    last_change: LAST_CHANGE_DATE.to_string(),
+                    last_change: get_default_last_change_date(),
                     long_name: "IE PUID".to_string(),
                     type_ref: TypeDefinitionXHtmlRef {
                         reference: data_types.xhtml_definition.identifier.clone(),
@@ -217,7 +220,7 @@ pub struct SpecObjectRequirement {
 }
 
 impl SpecObjectRequirement {
-    fn new(
+    pub fn new(
         identifier: String,
         last_change: String,
         long_name: String,
@@ -234,15 +237,25 @@ impl SpecObjectRequirement {
             values: SpecObjectRequirementValues {
                 req_id: AttributeValueXHtml {
                     definition: AttributeValueXHtmlDefinition {
-                        reference: spec_types.spec_object_type_requirement.attributes.id_attribute.identifier.clone(),
+                        reference: spec_types
+                            .spec_object_type_requirement
+                            .attributes
+                            .id_attribute
+                            .identifier
+                            .clone(),
                     },
                     the_value: XHtmlValue { value: identifier },
                 },
                 req_text: AttributeValueXHtml {
                     definition: AttributeValueXHtmlDefinition {
-                        reference: spec_types.spec_object_type_requirement.attributes.text_attribute.identifier.clone(),
+                        reference: spec_types
+                            .spec_object_type_requirement
+                            .attributes
+                            .text_attribute
+                            .identifier
+                            .clone(),
                     },
-                    the_value: XHtmlValue{value: text },
+                    the_value: XHtmlValue { value: text },
                 },
             },
         }
@@ -258,43 +271,43 @@ pub struct SpecObjects {
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct SpecificationRef {
     #[yaserde(rename = "SPECIFICATION-TYPE-REF")]
-    spec_ref: String,
+    pub spec_ref: String,
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct Object {
     #[yaserde(rename = "SPEC-OBJECT-REF")]
-    object_ref: String,
+    pub object_ref: String,
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct SpecHierarchy {
     #[yaserde(attribute, rename = "IDENTIFIER")]
-    identifier: String,
+    pub identifier: String,
     #[yaserde(attribute, rename = "LAST-CHANGE")]
-    last_change: String,
+    pub last_change: String,
     #[yaserde(rename = "OBJECT")]
-    object: Object,
+    pub object: Object,
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct Children {
     #[yaserde(rename = "SPEC-HIERARCHY")]
-    spec_hierarchy: SpecHierarchy,
+    pub spec_hierarchy: Vec<SpecHierarchy>,
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct Specification {
     #[yaserde(attribute, rename = "IDENTIFIER")]
-    identifier: String,
+    pub identifier: String,
     #[yaserde(attribute, rename = "LAST-CHANGE")]
-    last_change: String,
+    pub last_change: String,
     #[yaserde(attribute, rename = "LONG-NAME")]
-    long_name: String,
+    pub long_name: String,
     #[yaserde(rename = "TYPE")]
-    type_ref: SpecificationRef,
+    pub type_ref: SpecificationRef,
     #[yaserde(rename = "CHILDREN")]
-    children: Children,
+    pub children: Children,
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
@@ -331,23 +344,7 @@ impl CoreContent {
                     requirements: vec![],
                 },
                 specifications: Specifications {
-                    specifications: vec![Specification {
-                        identifier: "CAUR".to_string(),
-                        last_change: LAST_CHANGE_DATE.to_string(),
-                        long_name: "Crypto Ar User Requirements".to_string(),
-                        type_ref: SpecificationRef {
-                            spec_ref: spec_types.specification_type_module.identifier.clone(),
-                        },
-                        children: Children {
-                            spec_hierarchy: SpecHierarchy {
-                                identifier: "h1".to_string(),
-                                last_change: LAST_CHANGE_DATE.to_string(),
-                                object: Object {
-                                    object_ref: "CAUR-2".to_string(),
-                                },
-                            },
-                        },
-                    }],
+                    specifications: vec![],
                 },
                 spec_types,
                 data_types,
@@ -369,20 +366,11 @@ pub struct ReqIf {
     pub core_content: CoreContent,
 }
 
-#[cfg(test)]
-mod tests {
-
-    use crate::req_if::TheHeader;
-    use crate::req_if::LAST_CHANGE_DATE;
-    use crate::req_if::{CoreContent, ReqIf, ReqIfHeader, SpecObjectRequirement};
-    use std::fs::File;
-    use std::io::Write;
-
-    #[test]
-    fn test_serialize() {
+impl ReqIf {
+    pub fn new() -> Self {
         let req_if_header = ReqIfHeader {
             identifier: "1234567890".to_string(),
-            creation_time: LAST_CHANGE_DATE.to_string(),
+            creation_time: get_default_last_change_date(),
             repository_id: "123456789io0pxazsxdbghnjmk".to_string(),
             req_if_tool_id: "Doorstop".to_string(),
             req_if_version: "1.0".to_string(),
@@ -394,37 +382,28 @@ mod tests {
         let xmlns = "http://www.omg.org/spec/ReqIF/20110401/reqif.xsd".to_string();
         let xmlns_xhtml = "http://www.w3.org/1999/xhtml".to_string();
 
-        let mut a = ReqIf {
+        ReqIf {
             the_header,
             xmlns,
             xmlns_xhtml,
             core_content: CoreContent::new(),
-        };
+        }
+    }
 
-        a.core_content
+    pub fn add_requirement(&mut self,requirement :SpecObjectRequirement ){
+        self.core_content
             .req_if_content
             .spec_object
             .requirements
-            .push(SpecObjectRequirement::new(
-                "CAUR-2".to_string(),
-                LAST_CHANGE_DATE.to_string(),
-                "Titulo del requerimiento 2".to_string(),
-                "Texto del requerimiento 2".to_string(),
-                &a.core_content
-                    .req_if_content
-                    .spec_types,
-            ));
+            .push(requirement);
+    }
 
-        let yaserde_cfg = yaserde::ser::Config {
-            perform_indent: true,
-            ..Default::default()
-        };
+    pub fn add_specification(& mut self, specification: Specification) {
+        self.core_content.req_if_content.specifications.specifications.push(specification);
+    }
 
-        let s = yaserde::ser::to_string_with_config(&a, &yaserde_cfg)
-            .ok()
-            .unwrap();
-        // println!("{}", s);
-        let mut file = File::create("out.reqif").ok().unwrap();
-        let _ = file.write_all(s.as_bytes());
+    pub fn get_module_specification_type(&self)-> &String{
+        &self.core_content.req_if_content.spec_types.specification_type_module.identifier
     }
 }
+
