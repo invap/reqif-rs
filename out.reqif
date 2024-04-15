@@ -41,7 +41,30 @@
         </SPECIFICATION-TYPE>
       </SPEC-TYPES>
       <SPEC-OBJECTS>
-        <SPEC-OBJECT IDENTIFIER="CAUR-2" LAST-CHANGE="2017-11-14T15:44:26.000+02:00" LONG-NAME="Titulo del requerimiento 2">
+        <SPEC-OBJECT IDENTIFIER="CAUR-1" LAST-CHANGE="2024-04-15T15:14:43.002-03:00" LONG-NAME="Titulo del requerimiento 1">
+          <TYPE>
+            <SPEC-OBJECT-TYPE-REF>SPEC-OBJEC-TYPE-REQ-TYPE-IDENTIFIER</SPEC-OBJECT-TYPE-REF>
+          </TYPE>
+          <VALUES>
+            <ATTRIBUTE-VALUE-XHTML>
+              <THE-VALUE>
+                <xhtml:div>CAUR-1</xhtml:div>
+              </THE-VALUE>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>ATTRIBUTE-DEFINITION-XHTML-PUID-ID</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-XHTML>
+            <ATTRIBUTE-VALUE-XHTML>
+              <THE-VALUE>
+                <xhtml:div>Texto del requerimiento 1.</xhtml:div>
+              </THE-VALUE>
+              <DEFINITION>
+                <ATTRIBUTE-DEFINITION-XHTML-REF>ATTRIBUTE-DEFINITION-XHTML-REQIF.Text-ID</ATTRIBUTE-DEFINITION-XHTML-REF>
+              </DEFINITION>
+            </ATTRIBUTE-VALUE-XHTML>
+          </VALUES>
+        </SPEC-OBJECT>
+        <SPEC-OBJECT IDENTIFIER="CAUR-2" LAST-CHANGE="2024-04-15T15:14:43.002-03:00" LONG-NAME="Titulo del requerimiento 2">
           <TYPE>
             <SPEC-OBJECT-TYPE-REF>SPEC-OBJEC-TYPE-REQ-TYPE-IDENTIFIER</SPEC-OBJECT-TYPE-REF>
           </TYPE>
@@ -56,7 +79,7 @@
             </ATTRIBUTE-VALUE-XHTML>
             <ATTRIBUTE-VALUE-XHTML>
               <THE-VALUE>
-                <xhtml:div>Texto del requerimiento 2</xhtml:div>
+                <xhtml:div>Texto del requerimiento 2sdlfkj </xhtml:div>
               </THE-VALUE>
               <DEFINITION>
                 <ATTRIBUTE-DEFINITION-XHTML-REF>ATTRIBUTE-DEFINITION-XHTML-REQIF.Text-ID</ATTRIBUTE-DEFINITION-XHTML-REF>
@@ -66,12 +89,17 @@
         </SPEC-OBJECT>
       </SPEC-OBJECTS>
       <SPECIFICATIONS>
-        <SPECIFICATION IDENTIFIER="CAUR" LAST-CHANGE="2017-11-14T15:44:26.000+02:00" LONG-NAME="Crypto Ar User Requirements">
+        <SPECIFICATION IDENTIFIER="CAUR" LAST-CHANGE="2024-04-15T15:14:43.002-03:00" LONG-NAME="Crypto Ar User Requirements">
           <TYPE>
             <SPECIFICATION-TYPE-REF>MODULE-SPECIFICATION-TYPE-ID</SPECIFICATION-TYPE-REF>
           </TYPE>
           <CHILDREN>
-            <SPEC-HIERARCHY IDENTIFIER="h1" LAST-CHANGE="2017-11-14T15:44:26.000+02:00">
+            <SPEC-HIERARCHY IDENTIFIER="h1" LAST-CHANGE="2024-04-15T15:14:43.002-03:00">
+              <OBJECT>
+                <SPEC-OBJECT-REF>CAUR-1</SPEC-OBJECT-REF>
+              </OBJECT>
+            </SPEC-HIERARCHY>
+            <SPEC-HIERARCHY IDENTIFIER="h2" LAST-CHANGE="2024-04-15T15:14:43.002-03:00">
               <OBJECT>
                 <SPEC-OBJECT-REF>CAUR-2</SPEC-OBJECT-REF>
               </OBJECT>

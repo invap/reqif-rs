@@ -5,8 +5,6 @@ mod tests {
 
     use crate::req_if::{Object, ReqIf, SpecHierarchy, SpecObjectRequirement};
     use chrono::{DateTime, Local, SecondsFormat};
-    use std::fs::File;
-    use std::io::Write;
 
     #[test]
     fn test_serialize() {
@@ -55,16 +53,6 @@ mod tests {
         });
 
         reqif.add_specification(specification);
-
-        let yaserde_cfg = yaserde::ser::Config {
-            perform_indent: true,
-            ..Default::default()
-        };
-
-        let s = yaserde::ser::to_string_with_config(&reqif, &yaserde_cfg)
-            .ok()
-            .unwrap();
-        let mut file = File::create("out.reqif").ok().unwrap();
-        let _ = file.write_all(s.as_bytes());
+        reqif.write_to("libtest.reqif").unwrap();
     }
 }

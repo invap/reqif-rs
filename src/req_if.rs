@@ -1,4 +1,8 @@
+use std::fs::File;
+
+use anyhow::bail;
 use yaserde_derive::YaSerialize;
+use std::io::Write;
 
 fn get_default_last_change_date() -> String {
     "2017-11-14T15:44:26.000+02:00".to_string()
@@ -431,5 +435,21 @@ impl ReqIf {
             .spec_types
             .specification_type_module
             .identifier
+    }
+
+    pub fn write_to(&self, filename: &str)-> anyhow::Result<()>{
+        let yaserde_cfg = yaserde::ser::Config {
+            perform_indent: true,
+            ..Default::default()
+        };
+
+        let s = match yaserde::ser::to_string_with_config(self, &yaserde_cfg) {
+            Ok(s) => s,
+            Err(s) => bail!(s),
+        };
+
+        let mut file = File::create(filename)?;
+        let _ = file.write_all(s.as_bytes());
+        Ok(())
     }
 }
