@@ -65,8 +65,7 @@ pub struct SpecificationTypeModuleAttributes {
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct SpecificationTypeModule {
     #[yaserde(attribute, rename = "IDENTIFIER")]
-    
-identifier: String,
+    identifier: String,
     #[yaserde(attribute, rename = "LAST-CHANGE")]
     last_change: String,
     #[yaserde(attribute, rename = "LONG-NAME")]
@@ -390,7 +389,7 @@ impl ReqIf {
         }
     }
 
-    pub fn add_requirement(&mut self,requirement :SpecObjectRequirement ){
+    pub fn add_requirement(&mut self, requirement: SpecObjectRequirement) {
         self.core_content
             .req_if_content
             .spec_object
@@ -398,12 +397,39 @@ impl ReqIf {
             .push(requirement);
     }
 
-    pub fn add_specification(& mut self, specification: Specification) {
-        self.core_content.req_if_content.specifications.specifications.push(specification);
+    pub fn build_module_specification(
+        &mut self,
+        identifier: String,
+        last_change: String,
+        long_name: String,
+    ) -> Specification {
+       Specification {
+            identifier,
+            last_change,
+            long_name,
+            type_ref: SpecificationRef {
+                spec_ref: self.get_module_specification_type().clone(),
+            },
+            children: Children {
+                spec_hierarchy: vec![],
+            },
+        }
     }
 
-    pub fn get_module_specification_type(&self)-> &String{
-        &self.core_content.req_if_content.spec_types.specification_type_module.identifier
+    pub fn add_specification(&mut self, specification: Specification) {
+        self.core_content
+            .req_if_content
+            .specifications
+            .specifications
+            .push(specification);
+    }
+
+    pub fn get_module_specification_type(&self) -> &String {
+        &self
+            .core_content
+            .req_if_content
+            .spec_types
+            .specification_type_module
+            .identifier
     }
 }
-
