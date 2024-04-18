@@ -15,7 +15,7 @@ mod tests {
         let now = local.to_rfc3339_opts(SecondsFormat::Millis, false);
 
         reqif.add_requirement(SpecObjectRequirement::new(
-            "CAUR-1".to_string(),
+            "REQS-1".to_string(),
             now.clone(),
             "Titulo del requerimiento 1".to_string(),
             "Texto del requerimiento 1.".to_string(),
@@ -23,24 +23,24 @@ mod tests {
         ));
 
         reqif.add_requirement(SpecObjectRequirement::new(
-            "CAUR-2".to_string(),
+            "REQS-2".to_string(),
             now.clone(),
             "Titulo del requerimiento 2".to_string(),
-            "Texto del requerimiento 2sdlfkj ".to_string(),
+            "Texto del requerimiento 2.".to_string(),
             &reqif.core_content.req_if_content.spec_types,
         ));
 
         let mut specification = reqif.build_module_specification(
-            "CAUR".to_string(),
+            "REQS".to_string(),
             now.to_string(),
-            "Crypto Ar User Requirements".to_string(),
+            "Project User Requirements".to_string(),
         );
 
         specification.children.spec_hierarchy.push(SpecHierarchy {
             identifier: "h1".to_string(),
             last_change: now.clone(),
             object: Object {
-                object_ref: "CAUR-1".to_string(),
+                object_ref: "REQS-1".to_string(),
             },
         });
 
@@ -48,7 +48,7 @@ mod tests {
             identifier: "h2".to_string(),
             last_change: now.clone(),
             object: Object {
-                object_ref: "CAUR-2".to_string(),
+                object_ref: "REQS-2".to_string(),
             },
         });
 
