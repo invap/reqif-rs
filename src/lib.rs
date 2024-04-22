@@ -36,21 +36,23 @@ mod tests {
             "Project User Requirements".to_string(),
         );
 
-        specification.children.spec_hierarchy.push(SpecHierarchy {
+        specification.children.add_spec_hierarchy(SpecHierarchy {
             identifier: "h1".to_string(),
             last_change: now.clone(),
             object: Object {
                 object_ref: "REQS-1".to_string(),
             },
-        });
+            children:None,
+        },0).expect("Unexpected error adding children");
 
-        specification.children.spec_hierarchy.push(SpecHierarchy {
+        specification.children.add_spec_hierarchy(SpecHierarchy {
             identifier: "h2".to_string(),
             last_change: now.clone(),
             object: Object {
                 object_ref: "REQS-2".to_string(),
             },
-        });
+            children:None,
+        },1).expect("Unexpected error adding children");
 
         reqif.add_specification(specification);
         reqif.write_to("libtest.reqif").unwrap();

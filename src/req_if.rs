@@ -1,8 +1,7 @@
+use anyhow::{bail, Result};
 use std::fs::File;
-
-use anyhow::bail;
-use yaserde_derive::YaSerialize;
 use std::io::Write;
+use yaserde_derive::YaSerialize;
 
 fn get_default_last_change_date() -> String {
     "2017-11-14T15:44:26.000+02:00".to_string()
@@ -282,6 +281,11 @@ pub struct Object {
     #[yaserde(rename = "SPEC-OBJECT-REF")]
     pub object_ref: String,
 }
+impl Object {
+    pub fn new(object_ref: String) -> Object {
+        Object { object_ref }
+    }
+}
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct SpecHierarchy {
@@ -291,12 +295,67 @@ pub struct SpecHierarchy {
     pub last_change: String,
     #[yaserde(rename = "OBJECT")]
     pub object: Object,
+    #[yaserde(rename = "CHILDREN")]
+    pub children: Option<Children>,
+}
+
+impl SpecHierarchy {
+    pub fn new(identifier: String, last_change: String, object: Object) -> Self {
+        SpecHierarchy {
+            identifier,
+            last_change,
+            object,
+            children: None,
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
 pub struct Children {
     #[yaserde(rename = "SPEC-HIERARCHY")]
-    pub spec_hierarchy: Vec<SpecHierarchy>,
+    spec_hierarchy: Vec<SpecHierarchy>,
+}
+
+impl Children {
+    /// Adds the `spec_hierarchy` as the last children in the given `depth`.
+    /// a `depth` of 0 means add the spec as direct children.
+    /// # Panics:
+    /// Panic will occur in case that any intermediate level is missing.
+    pub fn add_spec_hierarchy(
+        &mut self,
+        spec_hierarchy: SpecHierarchy,
+        mut depth: i32,
+    ) -> Result<()> {
+        if depth == 0 {
+            self.spec_hierarchy.push(spec_hierarchy);
+        } else {
+            let spec = match self.spec_hierarchy.last_mut() {
+                Some(s) => s,
+                None => bail!("Missing spech hierarchy at level: {}", depth),
+            };
+
+            depth -= 1;
+            if spec.children.is_none() {
+                spec.children = Some(Children::new());
+            }
+
+            spec.children
+                .as_mut()
+                .unwrap()
+                .add_spec_hierarchy(spec_hierarchy, depth)?;
+        }
+        Ok(())
+    }
+
+    pub fn new() -> Self {
+        Children {
+            spec_hierarchy: Vec::new(),
+        }
+    }
+
+    pub fn get_spec_hierarchy(&self) -> &Vec<SpecHierarchy> {
+        &self.spec_hierarchy
+    }
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
@@ -407,7 +466,7 @@ impl ReqIf {
         last_change: String,
         long_name: String,
     ) -> Specification {
-       Specification {
+        Specification {
             identifier,
             last_change,
             long_name,
@@ -437,7 +496,7 @@ impl ReqIf {
             .identifier
     }
 
-    pub fn write_to(&self, filename: &str)-> anyhow::Result<()>{
+    pub fn write_to(&self, filename: &str) -> anyhow::Result<()> {
         let yaserde_cfg = yaserde::ser::Config {
             perform_indent: true,
             ..Default::default()
@@ -451,5 +510,83 @@ impl ReqIf {
         let mut file = File::create(filename)?;
         let _ = file.write_all(s.as_bytes());
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::{get_default_last_change_date, Children, Object, SpecHierarchy};
+
+    #[test]
+    fn test_add_spec_hierarchy() {
+        let mut children = Children::new();
+        for _ in 0..4 {
+            children.add_spec_hierarchy(
+                SpecHierarchy::new(
+                    "2.1.2".to_string(),
+                    get_default_last_change_date(),
+                    Object::new("REQ001".to_string()),
+                ),
+                0,
+            ).expect("Error");
+        }
+        assert_eq!(children.spec_hierarchy.len(), 4);
+    }
+
+    #[test]
+    fn test_add_spec_panic() {
+        let mut children = Children::new();
+        children.add_spec_hierarchy(
+            SpecHierarchy::new(
+                "2.1.2".to_string(),
+                get_default_last_change_date(),
+                Object::new("REQ001".to_string()),
+            ),
+            0,
+        ).expect("error");
+        let res = children.add_spec_hierarchy(
+            SpecHierarchy::new(
+                "2.1.2".to_string(),
+                get_default_last_change_date(),
+                Object::new("REQ001".to_string()),
+            ),
+            2,
+        );
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_add_spec_hierarchy_2() {
+        let mut children = Children::new();
+        children.add_spec_hierarchy(
+            SpecHierarchy::new(
+                "2.1.2".to_string(),
+                get_default_last_change_date(),
+                Object::new("REQ001".to_string()),
+            ),
+            0,
+        ).expect("error");
+        children.add_spec_hierarchy(
+            SpecHierarchy::new(
+                "2.1.2".to_string(),
+                get_default_last_change_date(),
+                Object::new("REQ001".to_string()),
+            ),
+            1,
+        ).expect("error");
+
+        children.add_spec_hierarchy(
+            SpecHierarchy::new(
+                "2.1.2".to_string(),
+                get_default_last_change_date(),
+                Object::new("REQ001".to_string()),
+            ),
+            1,
+        ).expect("error");
+
+        assert_eq!(children.spec_hierarchy.len(), 1);
+        let spec = children.get_spec_hierarchy().last().unwrap();
+        let len = spec.children.as_ref().unwrap().spec_hierarchy.len();
+        assert_eq!(len, 2)
     }
 }
