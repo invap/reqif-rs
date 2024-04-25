@@ -3,6 +3,12 @@ name = "reqif-rs"
 version = "0.1.0"
 edition = "2021"
 license = "AGPL-3.0-or-later"
+description= "Library for writing ReqIF files"
+homepage= "https://github.com/invap/reqif-rs"
+repository= "https://github.com/invap/reqif-rs"
+readme= "README.md"
+keywords=["ReqIf","Requirements", "Serialization"]
+authors= ["Juan Ignacio Vaccarezza <jivaccarezza@invap.com.ar>"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
