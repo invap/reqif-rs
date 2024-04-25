@@ -11,9 +11,9 @@ Contributions are welcome especially those that helps to remove this bias.
 - [x] Nested SpecHierarchy
 
 # Roadmap
-- [] Linking Spec Objects
-- [] Multiple Specifications
-- [] Types definition
+- [ ] Linking Spec Objects
+- [ ] Multiple Specifications
+- [ ] Types definition
 
 # Related Links
 - [capella](https://mbse-capella.org/)
