@@ -6,4 +6,4 @@ This library was conceived to transform from doorstop document into requirements
 
 This opinionated implementation was made to speed up the development and to achieve an MVP as fast as possible.
 
-Contributions are welcome even though those that aims to remove this bias. 
+Contributions are welcome especially those that helps to remove this bias.
