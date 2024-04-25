@@ -15,7 +15,7 @@ Contributions are welcome especially those that helps to remove this bias.
 - [ ] Multiple Specifications
 - [ ] Types definition
 
-# Related Links
+## Related Links
 - [capella](https://mbse-capella.org/)
 - [Reqif Spec](https://www.omg.org/spec/ReqIF/1.1/PDF/)
 
