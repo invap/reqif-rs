@@ -22,7 +22,7 @@ use std::io::Write;
 use yaserde_derive::YaSerialize;
 
 fn get_default_last_change_date() -> String {
-    "2017-11-14T15:44:26.000+02:00".to_string()
+    Local::now().to_rfc3339_opts(SecondsFormat::Millis, false)
 }
 
 #[derive(Debug, PartialEq, YaSerialize)]
