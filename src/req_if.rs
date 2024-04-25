@@ -15,8 +15,8 @@
 ///
 /// You should have received a copy of the GNU Affero General Public License
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 use anyhow::{bail, Result};
+use chrono::{DateTime, Local, SecondsFormat};
 use std::fs::File;
 use std::io::Write;
 use yaserde_derive::YaSerialize;
@@ -447,15 +447,22 @@ pub struct ReqIf {
 }
 
 impl ReqIf {
-    pub fn new() -> Self {
+    pub fn new(
+        identifier: String,
+        creation_time: DateTime<Local>,
+        repository_id: String,
+        req_if_tool_id: String,
+        source_tool_id: String,
+        title: String,
+    ) -> Self {
         let req_if_header = ReqIfHeader {
-            identifier: "1234567890".to_string(),
-            creation_time: get_default_last_change_date(),
-            repository_id: "123456789io0pxazsxdbghnjmk".to_string(),
-            req_if_tool_id: "Doorstop".to_string(),
+            identifier,
+            creation_time: creation_time.to_rfc3339_opts(SecondsFormat::Millis, false),
+            repository_id,
+            req_if_tool_id,
             req_if_version: "1.0".to_string(),
-            source_tool_id: "Doorstop".to_string(),
-            title: "Requirements examples".to_string(),
+            source_tool_id,
+            title,
         };
 
         let the_header = TheHeader { req_if_header };
@@ -539,14 +546,16 @@ mod test {
     fn test_add_spec_hierarchy() {
         let mut children = Children::new();
         for _ in 0..4 {
-            children.add_spec_hierarchy(
-                SpecHierarchy::new(
-                    "2.1.2".to_string(),
-                    get_default_last_change_date(),
-                    Object::new("REQ001".to_string()),
-                ),
-                0,
-            ).expect("Error");
+            children
+                .add_spec_hierarchy(
+                    SpecHierarchy::new(
+                        "2.1.2".to_string(),
+                        get_default_last_change_date(),
+                        Object::new("REQ001".to_string()),
+                    ),
+                    0,
+                )
+                .expect("Error");
         }
         assert_eq!(children.spec_hierarchy.len(), 4);
     }
@@ -554,14 +563,16 @@ mod test {
     #[test]
     fn test_add_spec_panic() {
         let mut children = Children::new();
-        children.add_spec_hierarchy(
-            SpecHierarchy::new(
-                "2.1.2".to_string(),
-                get_default_last_change_date(),
-                Object::new("REQ001".to_string()),
-            ),
-            0,
-        ).expect("error");
+        children
+            .add_spec_hierarchy(
+                SpecHierarchy::new(
+                    "2.1.2".to_string(),
+                    get_default_last_change_date(),
+                    Object::new("REQ001".to_string()),
+                ),
+                0,
+            )
+            .expect("error");
         let res = children.add_spec_hierarchy(
             SpecHierarchy::new(
                 "2.1.2".to_string(),
@@ -576,31 +587,37 @@ mod test {
     #[test]
     fn test_add_spec_hierarchy_2() {
         let mut children = Children::new();
-        children.add_spec_hierarchy(
-            SpecHierarchy::new(
-                "2.1.2".to_string(),
-                get_default_last_change_date(),
-                Object::new("REQ001".to_string()),
-            ),
-            0,
-        ).expect("error");
-        children.add_spec_hierarchy(
-            SpecHierarchy::new(
-                "2.1.2".to_string(),
-                get_default_last_change_date(),
-                Object::new("REQ001".to_string()),
-            ),
-            1,
-        ).expect("error");
+        children
+            .add_spec_hierarchy(
+                SpecHierarchy::new(
+                    "2.1.2".to_string(),
+                    get_default_last_change_date(),
+                    Object::new("REQ001".to_string()),
+                ),
+                0,
+            )
+            .expect("error");
+        children
+            .add_spec_hierarchy(
+                SpecHierarchy::new(
+                    "2.1.2".to_string(),
+                    get_default_last_change_date(),
+                    Object::new("REQ001".to_string()),
+                ),
+                1,
+            )
+            .expect("error");
 
-        children.add_spec_hierarchy(
-            SpecHierarchy::new(
-                "2.1.2".to_string(),
-                get_default_last_change_date(),
-                Object::new("REQ001".to_string()),
-            ),
-            1,
-        ).expect("error");
+        children
+            .add_spec_hierarchy(
+                SpecHierarchy::new(
+                    "2.1.2".to_string(),
+                    get_default_last_change_date(),
+                    Object::new("REQ001".to_string()),
+                ),
+                1,
+            )
+            .expect("error");
 
         assert_eq!(children.spec_hierarchy.len(), 1);
         let spec = children.get_spec_hierarchy().last().unwrap();

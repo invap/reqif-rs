@@ -15,7 +15,6 @@
 ///
 /// You should have received a copy of the GNU Affero General Public License
 /// along with this program.  If not, see <https://www.gnu.org/licenses/>.
-
 pub mod req_if;
 
 #[cfg(test)]
@@ -26,7 +25,22 @@ mod tests {
 
     #[test]
     fn test_serialize() {
-        let mut reqif = ReqIf::new();
+
+        let local: DateTime<Local> = Local::now();
+        let identifier = "1234567890".to_string();
+        let repository_id = "123456789io0pxazsxdbghnjmk".to_string();
+        let req_if_tool_id = "Doorstop".to_string();
+        let source_tool_id = "Doorstop".to_string();
+        let title = "Requirements examples".to_string();
+
+        let mut reqif = ReqIf::new(
+            identifier,
+            local,
+            repository_id,
+            req_if_tool_id,
+            source_tool_id,
+            title,
+        );
 
         let local: DateTime<Local> = Local::now();
 
@@ -54,23 +68,35 @@ mod tests {
             "Project User Requirements".to_string(),
         );
 
-        specification.children.add_spec_hierarchy(SpecHierarchy {
-            identifier: "h1".to_string(),
-            last_change: now.clone(),
-            object: Object {
-                object_ref: "REQS-1".to_string(),
-            },
-            children:None,
-        },0).expect("Unexpected error adding children");
+        specification
+            .children
+            .add_spec_hierarchy(
+                SpecHierarchy {
+                    identifier: "h1".to_string(),
+                    last_change: now.clone(),
+                    object: Object {
+                        object_ref: "REQS-1".to_string(),
+                    },
+                    children: None,
+                },
+                0,
+            )
+            .expect("Unexpected error adding children");
 
-        specification.children.add_spec_hierarchy(SpecHierarchy {
-            identifier: "h2".to_string(),
-            last_change: now.clone(),
-            object: Object {
-                object_ref: "REQS-2".to_string(),
-            },
-            children:None,
-        },1).expect("Unexpected error adding children");
+        specification
+            .children
+            .add_spec_hierarchy(
+                SpecHierarchy {
+                    identifier: "h2".to_string(),
+                    last_change: now.clone(),
+                    object: Object {
+                        object_ref: "REQS-2".to_string(),
+                    },
+                    children: None,
+                },
+                1,
+            )
+            .expect("Unexpected error adding children");
 
         reqif.add_specification(specification);
         reqif.write_to("libtest.reqif").unwrap();
