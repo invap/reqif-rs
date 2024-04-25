@@ -1,5 +1,5 @@
-# Reqif Rust library Library to write Reqif files.
-
+# Reqif Rust library Library to write Reqif files
+![build](https://github.com/invap/reqif-rs/actions/workflows/rust.yml/badge.svg)
 ## Disclaimer
 This library was conceived to transform from doorstop document into requirements that can be imported in the Capella MBSE tool.
 
