@@ -9,6 +9,7 @@ repository= "https://github.com/invap/reqif-rs"
 readme= "README.md"
 keywords=["ReqIf","Requirements", "Serialization"]
 authors= ["Juan Ignacio Vaccarezza <jivaccarezza@invap.com.ar>"]
+documentation="https://docs.rs/reqif-rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
